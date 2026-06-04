@@ -11,7 +11,7 @@ type Page = "containers" | "terminal";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  const [page, setPage] = useState<Page>("containers");
+  const [page, setPage] = useState<Page>("terminal");
 
   useEffect(() => {
     apiFetch<User>("/api/auth/me")
@@ -39,19 +39,19 @@ export default function Dashboard() {
         <nav className="nav-sidebar">
           <button
             type="button"
-            className={`nav-item ${page === "containers" ? "active" : ""}`}
-            onClick={() => setPage("containers")}
-          >
-            <span className="nav-icon">▣</span>
-            컨테이너
-          </button>
-          <button
-            type="button"
             className={`nav-item ${page === "terminal" ? "active" : ""}`}
             onClick={() => setPage("terminal")}
           >
             <span className="nav-icon">$</span>
             터미널
+          </button>
+          <button
+            type="button"
+            className={`nav-item ${page === "containers" ? "active" : ""}`}
+            onClick={() => setPage("containers")}
+          >
+            <span className="nav-icon">▣</span>
+            컨테이너
           </button>
         </nav>
         <main className="content">

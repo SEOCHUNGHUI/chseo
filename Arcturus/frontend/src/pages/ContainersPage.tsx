@@ -11,10 +11,12 @@ export default function ContainersPage() {
   const [containers, setContainers] = useState<Container[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [tab, setTab] = useState<DetailTab>("logs");
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadContainers = useCallback(async () => {
     const data = await apiFetch<Container[]>("/api/containers");
     setContainers(data);
+    setIsLoading(false);
     setSelectedId((prev) => prev ?? (data[0]?.id ?? null));
   }, []);
 
@@ -49,7 +51,10 @@ export default function ContainersPage() {
           </button>
         </div>
         <div className="ct-table">
-          {containers.length === 0 && (
+          {isLoading && (
+            <div className="ct-empty">컨테이너를 조회하고 있습니다.</div>
+          )}
+          {!isLoading && containers.length === 0 && (
             <div className="ct-empty">컨테이너가 없습니다.</div>
           )}
           {containers.map((c) => (

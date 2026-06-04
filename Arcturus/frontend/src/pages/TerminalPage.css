@@ -1,0 +1,320 @@
+.terminal-page {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── 좌측 사이드바 ── */
+.ssh-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ssh-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ── 추가 폼 ── */
+.ssh-form {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.ssh-form input {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.ssh-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+/* ── 서버 목록 ── */
+.ssh-server-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.4rem;
+}
+
+.ssh-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+.ssh-row {
+  display: flex;
+  align-items: stretch;
+  border-radius: 7px;
+  margin-bottom: 0.3rem;
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ssh-row.selected {
+  border-color: var(--border);
+}
+
+.ssh-row.connected {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.06);
+}
+
+.ssh-row-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.5rem 0.6rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+}
+
+.ssh-row-info:hover {
+  background: rgba(59, 130, 246, 0.07);
+}
+
+.ssh-name {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.ssh-addr {
+  font-size: 0.71rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.ssh-badge {
+  font-size: 0.67rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--success);
+  margin-top: 0.1rem;
+}
+
+.btn-remove {
+  padding: 0 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-remove:hover {
+  color: var(--danger);
+}
+
+/* ── 하단 연결 상태 ── */
+.ssh-footer {
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.ssh-footer-label {
+  font-size: 0.78rem;
+  color: var(--success);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── 우측 터미널 영역 ── */
+.ssh-terminal-wrap {
+  flex: 1;
+  min-width: 0;
+  background: #0a0e14;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ssh-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ssh-xterm {
+  flex: 1;
+  padding: 0.5rem;
+  height: 100%;
+}
+
+.ssh-xterm .xterm {
+  height: 100%;
+}
+
+/* ── 비밀번호 모달 ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.modal h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.modal-target {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-family: monospace;
+}
+
+.modal input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* ── 버튼 공통 ── */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-sm:hover {
+  border-color: var(--accent);
+}
+
+.btn-primary {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-primary-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-primary-sm:hover {
+  background: var(--accent-hover);
+}
+
+.btn-danger-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--danger);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-danger-sm:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
