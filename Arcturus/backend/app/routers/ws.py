@@ -176,7 +176,7 @@ async def ssh_terminal(websocket: WebSocket):
     password = creds.get("password", "")
 
     if not host or not username:
-        await websocket.send_bytes(b"\r\n\x1b[31mhost / username 이 없습니다.\x1b[0m\r\n")
+        await websocket.send_bytes("\r\n\x1b[31mhost / username is required\x1b[0m\r\n".encode())
         await websocket.close()
         return
 
