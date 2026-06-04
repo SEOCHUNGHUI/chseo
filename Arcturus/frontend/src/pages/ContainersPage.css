@@ -1,0 +1,173 @@
+.containers-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── 컨테이너 목록 ── */
+.ct-table-wrap {
+  flex-shrink: 0;
+  max-height: 42%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid var(--border);
+}
+
+.ct-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ct-table {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.ct-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ct-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1.5fr) minmax(100px, 2fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+  border-left: 2px solid transparent;
+}
+
+.ct-row:hover {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.ct-row.selected {
+  background: rgba(59, 130, 246, 0.1);
+  border-left-color: var(--accent);
+}
+
+.ct-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ct-image {
+  font-size: 0.76rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ct-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+/* ── 배지 ── */
+.badge {
+  font-size: 0.69rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  text-transform: lowercase;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.status-running {
+  background: rgba(34, 197, 94, 0.18);
+  color: var(--success);
+}
+
+.status-exited,
+.status-dead {
+  background: rgba(139, 156, 179, 0.18);
+  color: var(--muted);
+}
+
+.status-paused,
+.status-restarting {
+  background: rgba(245, 158, 11, 0.18);
+  color: var(--warning);
+}
+
+/* ── 상세 패널 ── */
+.detail-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detail-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.detail-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-right: 0.5rem;
+}
+
+.detail-tabs button {
+  padding: 0.28rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.detail-tabs button.active {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+}
+
+.detail-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── 버튼 공통 ── */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-sm:hover {
+  border-color: var(--accent);
+}

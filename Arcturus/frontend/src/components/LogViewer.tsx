@@ -9,7 +9,6 @@ interface Props {
 export default function LogViewer({ containerId }: Props) {
   const [logs, setLogs] = useState("");
   const [connected, setConnected] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -42,10 +41,6 @@ export default function LogViewer({ containerId }: Props) {
     return () => ws.close();
   }, [containerId]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [logs]);
-
   return (
     <div className="log-viewer">
       <div className="panel-header">
@@ -56,7 +51,6 @@ export default function LogViewer({ containerId }: Props) {
       </div>
       <pre className="log-content">
         {containerId ? logs || "로그 대기 중…" : "컨테이너를 선택하세요."}
-        <div ref={bottomRef} />
       </pre>
     </div>
   );
