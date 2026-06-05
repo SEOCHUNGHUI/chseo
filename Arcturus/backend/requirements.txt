@@ -10,3 +10,4 @@ websockets==14.1
 paramiko==3.5.0
 pydantic-settings==2.7.0
 python-multipart==0.0.20
+pymysql==1.1.1

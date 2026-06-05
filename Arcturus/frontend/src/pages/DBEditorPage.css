@@ -72,6 +72,35 @@
   border-color: var(--accent);
 }
 
+.db-type-toggle {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.db-type-btn {
+  flex: 1;
+  padding: 0.28rem 0.4rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.db-type-btn.active {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.db-type-icon {
+  margin-right: 0.25rem;
+  font-size: 0.8rem;
+}
+
 .form-row {
   display: flex;
   gap: 0.4rem;

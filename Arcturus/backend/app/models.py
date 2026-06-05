@@ -21,6 +21,7 @@ class DBConnection(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(128), nullable=False)
+    db_type: Mapped[str] = mapped_column(String(20), nullable=False, server_default="postgresql")
     host: Mapped[str] = mapped_column(String(256), nullable=False)
     port: Mapped[int] = mapped_column(Integer, default=5432)
     username: Mapped[str] = mapped_column(String(128), nullable=False)

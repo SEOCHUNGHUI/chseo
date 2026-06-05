@@ -36,6 +36,7 @@ class ContainerActionResponse(BaseModel):
 
 class DBConnectionCreate(BaseModel):
     name: str
+    db_type: str = "postgresql"
     host: str
     port: int = 5432
     username: str
@@ -45,6 +46,7 @@ class DBConnectionCreate(BaseModel):
 class DBConnectionOut(BaseModel):
     id: int
     name: str
+    db_type: str
     host: str
     port: int
     username: str

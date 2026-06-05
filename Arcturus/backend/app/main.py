@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.auth import hash_password
@@ -28,10 +29,22 @@ def seed_admin():
         db.close()
 
 
+def migrate():
+    with engine.connect() as conn:
+        try:
+            conn.execute(
+                text("ALTER TABLE db_connections ADD COLUMN db_type VARCHAR(20) NOT NULL DEFAULT 'postgresql'")
+            )
+            conn.commit()
+        except Exception:
+            pass  # 이미 컬럼이 존재하는 경우
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
     seed_admin()
+    migrate()
     yield
 
 

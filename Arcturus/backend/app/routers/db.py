@@ -2,6 +2,8 @@ import asyncio
 
 import psycopg2
 import psycopg2.extras
+import pymysql
+import pymysql.cursors
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -18,25 +20,48 @@ from app.schemas import (
 
 router = APIRouter(prefix="/api/db", tags=["db"])
 
-_SCHEMA_SQL = """
-    SELECT table_schema, table_name, table_type
-    FROM information_schema.tables
-    WHERE table_schema NOT IN ('information_schema', 'pg_catalog')
-    ORDER BY table_schema, table_name
-"""
+_SCHEMA_SQL = {
+    "postgresql": """
+        SELECT table_schema, table_name, table_type
+        FROM information_schema.tables
+        WHERE table_schema NOT IN ('information_schema', 'pg_catalog')
+        ORDER BY table_schema, table_name
+    """,
+    "mysql": """
+        SELECT table_schema, table_name, table_type
+        FROM information_schema.tables
+        WHERE table_schema = DATABASE()
+        ORDER BY table_name
+    """,
+}
 
 
-def _connect(host: str, port: int, user: str, password: str, dbname: str):
+def _connect_pg(host, port, user, password, dbname):
     return psycopg2.connect(
-        host=host, port=port, user=user, password=password, dbname=dbname, connect_timeout=10
+        host=host, port=port, user=user, password=password,
+        dbname=dbname, connect_timeout=10,
     )
 
 
-def _run_query(host: str, port: int, user: str, password: str, dbname: str, sql: str) -> dict:
+def _connect_mysql(host, port, user, password, dbname):
+    return pymysql.connect(
+        host=host, port=port, user=user, password=password,
+        database=dbname, connect_timeout=10,
+        charset="utf8mb4", autocommit=False,
+    )
+
+
+def _run_query(host: str, port: int, user: str, password: str, dbname: str, db_type: str, sql: str) -> dict:
     try:
-        conn = _connect(host, port, user, password, dbname)
+        if db_type == "mysql":
+            conn = _connect_mysql(host, port, user, password, dbname)
+            cursor_cls = pymysql.cursors.Cursor
+        else:
+            conn = _connect_pg(host, port, user, password, dbname)
+            cursor_cls = None
+
         try:
-            with conn.cursor() as cur:
+            with (conn.cursor(cursor_cls) if cursor_cls else conn.cursor()) as cur:
                 cur.execute(sql)
                 if cur.description:
                     columns = [desc[0] for desc in cur.description]
@@ -52,8 +77,9 @@ def _run_query(host: str, port: int, user: str, password: str, dbname: str, sql:
         return {"columns": [], "rows": [], "rowcount": 0, "error": str(exc)}
 
 
-def _run_schema(host: str, port: int, user: str, password: str, dbname: str) -> dict:
-    return _run_query(host, port, user, password, dbname, _SCHEMA_SQL)
+def _run_schema(host: str, port: int, user: str, password: str, dbname: str, db_type: str) -> dict:
+    sql = _SCHEMA_SQL.get(db_type, _SCHEMA_SQL["postgresql"])
+    return _run_query(host, port, user, password, dbname, db_type, sql)
 
 
 def _get_conn_or_404(conn_id: int, db: Session) -> DBConnection:
@@ -97,7 +123,7 @@ async def execute_query(
 ):
     conn = _get_conn_or_404(data.connection_id, db)
     result = await asyncio.to_thread(
-        _run_query, conn.host, conn.port, conn.username, data.password, conn.dbname, data.sql
+        _run_query, conn.host, conn.port, conn.username, data.password, conn.dbname, conn.db_type, data.sql
     )
     return result
 
@@ -110,6 +136,6 @@ async def fetch_schema(
 ):
     conn = _get_conn_or_404(data.connection_id, db)
     result = await asyncio.to_thread(
-        _run_schema, conn.host, conn.port, conn.username, data.password, conn.dbname
+        _run_schema, conn.host, conn.port, conn.username, data.password, conn.dbname, conn.db_type
     )
     return result

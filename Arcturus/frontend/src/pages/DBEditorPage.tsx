@@ -5,6 +5,7 @@ import "./DBEditorPage.css";
 interface DBConnection {
   id: number;
   name: string;
+  db_type: string;
   host: string;
   port: number;
   username: string;
@@ -24,7 +25,8 @@ interface TableInfo {
   type: string;
 }
 
-const EMPTY_FORM = { name: "", host: "", port: "5432", username: "", dbname: "" };
+const DEFAULT_PORT: Record<string, string> = { postgresql: "5432", mysql: "3306" };
+const EMPTY_FORM = { name: "", db_type: "postgresql", host: "", port: "5432", username: "", dbname: "" };
 
 export default function DBEditorPage() {
   const [connections, setConnections] = useState<DBConnection[]>([]);
@@ -192,6 +194,20 @@ export default function DBEditorPage() {
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
             />
+            <div className="db-type-toggle">
+              {["postgresql", "mysql"].map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  className={`db-type-btn ${form.db_type === t ? "active" : ""}`}
+                  onClick={() =>
+                    setForm((f) => ({ ...f, db_type: t, port: DEFAULT_PORT[t] }))
+                  }
+                >
+                  {t === "postgresql" ? "🐘 PostgreSQL" : "🐬 MySQL"}
+                </button>
+              ))}
+            </div>
             <input
               placeholder="Host *"
               value={form.host}
@@ -246,7 +262,12 @@ export default function DBEditorPage() {
                 className="db-conn-info"
                 onClick={() => openPasswordModal(c)}
               >
-                <span className="db-conn-name">{c.name}</span>
+                <span className="db-conn-name">
+                  <span className="db-type-icon">
+                    {c.db_type === "mysql" ? "🐬" : "🐘"}
+                  </span>
+                  {c.name}
+                </span>
                 <span className="db-conn-addr">
                   {c.username}@{c.host}:{c.port}/{c.dbname}
                 </span>
