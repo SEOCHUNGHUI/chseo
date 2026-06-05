@@ -16,12 +16,86 @@
 }
 
 .ft-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--border);
   font-size: 0.82rem;
   font-weight: 600;
   flex-shrink: 0;
 }
+
+/* ── 서버 추가 폼 ── */
+.ft-add-form {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.ft-add-form input {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 0.78rem;
+  box-sizing: border-box;
+}
+
+.ft-add-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.ft-form-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.ft-form-actions {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.btn-icon {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-remove {
+  padding: 0 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-remove:hover { color: var(--danger); }
 
 .ft-server-list {
   flex: 1;
@@ -38,6 +112,8 @@
 }
 
 .ft-server-row {
+  display: flex;
+  align-items: stretch;
   border-radius: 7px;
   border: 1px solid transparent;
   margin-bottom: 0.3rem;

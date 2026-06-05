@@ -61,15 +61,33 @@ function pathUp(p: string): string {
   return parts.join("/") || "/";
 }
 
+const EMPTY_FORM = { name: "", host: "", port: "22", username: "" };
+
+function loadServers(): ServerProfile[] {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveServers(list: ServerProfile[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
 export default function FileTransferPage() {
   // ── SSH 서버 목록 (localStorage) ──
-  const [servers, setServers] = useState<ServerProfile[]>([]);
+  const [servers, setServers] = useState<ServerProfile[]>(loadServers);
   const [creds, setCreds] = useState<Creds | null>(null);
   const [activeServerId, setActiveServerId] = useState<string | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [pendingServer, setPendingServer] = useState<ServerProfile | null>(null);
   const [pwInput, setPwInput] = useState("");
   const [connectError, setConnectError] = useState("");
+
+  // ── 서버 추가 폼 ──
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
 
   // ── 원격 브라우저 ──
   const [remotePath, setRemotePath] = useState("/");
@@ -92,15 +110,29 @@ export default function FileTransferPage() {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 서버 목록 로드
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      setServers(raw ? JSON.parse(raw) : []);
-    } catch {
-      setServers([]);
-    }
-  }, []);
+  function addServer() {
+    if (!form.host || !form.username) return;
+    const newServer: ServerProfile = {
+      id: `${Date.now()}-${Math.random()}`,
+      name: form.name || `${form.username}@${form.host}`,
+      host: form.host,
+      port: form.port || "22",
+      username: form.username,
+    };
+    const updated = [...servers, newServer];
+    setServers(updated);
+    saveServers(updated);
+    setForm(EMPTY_FORM);
+    setShowAddForm(false);
+  }
+
+  function removeServer(id: string, e: React.MouseEvent) {
+    e.stopPropagation();
+    if (activeServerId === id) disconnect();
+    const updated = servers.filter((s) => s.id !== id);
+    setServers(updated);
+    saveServers(updated);
+  }
 
   // ── API 헬퍼 ──
   const sftp = useCallback(
@@ -340,11 +372,63 @@ export default function FileTransferPage() {
       <div className="ft-sidebar">
         <div className="ft-sidebar-header">
           <span>SSH 서버</span>
+          <button
+            type="button"
+            className="btn-icon"
+            onClick={() => setShowAddForm((v) => !v)}
+            title="서버 추가"
+          >
+            +
+          </button>
         </div>
+
+        {showAddForm && (
+          <div className="ft-add-form">
+            <input
+              placeholder="이름 (선택)"
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            />
+            <input
+              placeholder="IP / 호스트 *"
+              value={form.host}
+              onChange={(e) => setForm((f) => ({ ...f, host: e.target.value }))}
+            />
+            <div className="ft-form-row">
+              <input
+                placeholder="포트"
+                value={form.port}
+                style={{ width: "55px" }}
+                onChange={(e) => setForm((f) => ({ ...f, port: e.target.value }))}
+              />
+              <input
+                placeholder="사용자명 *"
+                value={form.username}
+                style={{ flex: 1 }}
+                onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
+                onKeyDown={(e) => e.key === "Enter" && addServer()}
+              />
+            </div>
+            <div className="ft-form-actions">
+              <button type="button" className="btn-primary-sm" onClick={addServer}>
+                저장
+              </button>
+              <button
+                type="button"
+                className="btn-sm"
+                onClick={() => { setShowAddForm(false); setForm(EMPTY_FORM); }}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="ft-server-list">
           {servers.length === 0 && (
             <div className="ft-empty">
-              터미널 메뉴에서<br />서버를 먼저 추가하세요.
+              + 버튼으로 서버를 추가하세요.<br />
+              <span style={{ fontSize: "0.72rem" }}>터미널 메뉴와 공유됩니다.</span>
             </div>
           )}
           {servers.map((s) => (
@@ -370,9 +454,18 @@ export default function FileTransferPage() {
                   <span className="ft-badge">연결됨</span>
                 )}
               </button>
+              <button
+                type="button"
+                className="btn-remove"
+                onClick={(e) => removeServer(s.id, e)}
+                title="삭제"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
+
         {creds && (
           <div className="ft-sidebar-footer">
             <button type="button" className="btn-danger-sm" onClick={disconnect}>
