@@ -142,7 +142,11 @@ export default function DBEditorPage() {
   }
 
   function insertTableQuery(schema: string, name: string) {
-    setSql(`SELECT * FROM "${schema}"."${name}" LIMIT 100;`);
+    const q =
+      activeConn?.db_type === "mysql"
+        ? `SELECT * FROM \`${name}\` LIMIT 100;`
+        : `SELECT * FROM "${schema}"."${name}" LIMIT 100;`;
+    setSql(q);
     editorRef.current?.focus();
   }
 
