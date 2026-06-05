@@ -1,6 +1,6 @@
-/* 한 곳에서 컬럼 비율 관리 — 헤더와 행이 동일 변수를 참조 */
+/* minmax(0, Xfr): min=0 이어야 fr이 content 최소너비에 밀리지 않음 */
 :root {
-  --ct-grid: 1.4fr 90px 1.8fr 110px 58px 64px 90px auto;
+  --ct-grid: minmax(0, 1.4fr) 90px minmax(0, 1.8fr) 100px 58px 64px 90px auto;
 }
 
 .containers-page {
@@ -61,10 +61,14 @@
 }
 
 .ct-cpu,
-.ct-mem {
+.ct-mem,
+.ct-ports {
   font-size: 0.75rem;
   font-family: monospace;
   color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ct-row {
