@@ -157,44 +157,76 @@
 
 /* ── 드롭존 ── */
 .ft-drop-zone {
-  margin: 0.6rem;
+  margin: 0.6rem 0.6rem 0.4rem;
   border: 2px dashed var(--border);
   border-radius: 10px;
-  padding: 1.5rem 1rem;
+  padding: 1.2rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
+  gap: 0.4rem;
   transition: border-color 0.15s, background 0.15s;
   flex-shrink: 0;
 }
 
-.ft-drop-zone:hover:not(.disabled) {
-  border-color: var(--accent);
-  background: rgba(59, 130, 246, 0.05);
-}
-
 .ft-drop-zone.drag-over {
   border-color: var(--accent);
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(59, 130, 246, 0.12);
+  border-style: solid;
 }
 
 .ft-drop-zone.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+  opacity: 0.35;
 }
 
 .ft-drop-icon {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: var(--muted);
 }
 
 .ft-drop-text {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--muted);
   text-align: center;
-  line-height: 1.5;
+}
+
+/* ── 파일 선택 버튼 ── */
+.ft-upload-btn-wrap {
+  padding: 0 0.6rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.ft-upload-btn {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.ft-upload-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.ft-upload-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ft-upload-hint {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--muted);
 }
 
 /* ── 업로드 큐 ── */

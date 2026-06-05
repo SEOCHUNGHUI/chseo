@@ -393,29 +393,40 @@ export default function FileTransferPage() {
             </span>
           </div>
 
+          {/* 드래그앤드롭 영역 */}
           <div
             className={`ft-drop-zone ${isDragOver ? "drag-over" : ""} ${!creds ? "disabled" : ""}`}
             onDragOver={(e) => { e.preventDefault(); if (creds) setIsDragOver(true); }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={onDrop}
-            onClick={() => creds && fileInputRef.current?.click()}
           >
             <div className="ft-drop-icon">⬆</div>
             <div className="ft-drop-text">
-              {isDragOver
-                ? "여기에 놓으세요"
-                : creds
-                ? "파일을 드래그하거나 클릭해서 선택"
-                : "서버에 연결하세요"}
+              {isDragOver ? "여기에 놓으세요" : "파일을 여기로 드래그"}
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              style={{ display: "none" }}
-              onChange={(e) => e.target.files && uploadFiles(e.target.files)}
-            />
           </div>
+
+          {/* 파일 선택 버튼 — 항상 보임 */}
+          <div className="ft-upload-btn-wrap">
+            <button
+              type="button"
+              className="ft-upload-btn"
+              disabled={!creds}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              📂 파일 선택하기
+            </button>
+            {!creds && (
+              <span className="ft-upload-hint">서버에 먼저 연결하세요</span>
+            )}
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            style={{ display: "none" }}
+            onChange={(e) => e.target.files && uploadFiles(e.target.files)}
+          />
 
           <div className="ft-queue">
             {uploadQueue.length === 0 && (

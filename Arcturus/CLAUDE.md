@@ -11,7 +11,7 @@
 | Frontend | React 18 + TypeScript + Vite |
 | Terminal UI | xterm.js + FitAddon (WebSocket) |
 | Backend | FastAPI + SQLAlchemy (sync) |
-| Panel DB | PostgreSQL 16 (SQLAlchemy ORM) |
+| Panel DB | **SQLite** (파일 기반, 별도 컨테이너 없음) |
 | Auth | JWT Bearer Token (python-jose) |
 | SSH | paramiko (WebSocket 프록시) |
 | Docker 제어 | docker SDK (`docker.sock` 마운트) |
