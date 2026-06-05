@@ -8,11 +8,58 @@
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.25rem;
+  gap: 1.5rem;
+  padding: 0.55rem 1.25rem;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
   flex-shrink: 0;
+}
+
+/* ── 호스트 리소스 stats ── */
+.host-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+  width: 2.5rem;
+}
+
+.stat-bar-wrap {
+  width: 60px;
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.stat-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.stat-value {
+  color: var(--text);
+  font-family: monospace;
+  font-size: 0.75rem;
+  min-width: 70px;
 }
 
 .brand {

@@ -9,7 +9,7 @@ from app.auth import hash_password
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.models import User
-from app.routers import auth, containers, db, memo, sftp, ws
+from app.routers import auth, containers, db, memo, sftp, system, ws
 
 
 def seed_admin():
@@ -63,6 +63,7 @@ app.include_router(containers.router)
 app.include_router(db.router)
 app.include_router(memo.router)
 app.include_router(sftp.router)
+app.include_router(system.router)
 app.include_router(ws.router)
 
 

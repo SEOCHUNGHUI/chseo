@@ -28,8 +28,8 @@
 
 .ct-col-header {
   display: grid;
-  grid-template-columns: minmax(110px, 1.4fr) 80px minmax(120px, 1.6fr) minmax(80px, 1fr) 90px auto;
-  gap: 0.6rem;
+  grid-template-columns: minmax(100px, 1.3fr) 75px minmax(110px, 1.5fr) minmax(70px, 0.9fr) 55px 65px 85px auto;
+  gap: 0.5rem;
   padding: 0.3rem 1rem;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
@@ -53,9 +53,16 @@
   font-size: 0.9rem;
 }
 
+.ct-cpu,
+.ct-mem {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--muted);
+}
+
 .ct-row {
   display: grid;
-  grid-template-columns: minmax(110px, 1.4fr) 80px minmax(120px, 1.6fr) minmax(80px, 1fr) 90px auto;
+  grid-template-columns: minmax(100px, 1.3fr) 75px minmax(110px, 1.5fr) minmax(70px, 0.9fr) 55px 65px 85px auto;
   align-items: center;
   gap: 0.6rem;
   padding: 0.5rem 1rem;

@@ -7,8 +7,23 @@ import "./ContainersPage.css";
 
 type DetailTab = "logs" | "terminal";
 
+interface ContainerStat {
+  id: string;
+  cpu_percent: number;
+  mem_usage: number;
+  mem_limit: number;
+}
+
+function fmtMem(bytes: number): string {
+  if (bytes >= 1024 ** 3) return `${(bytes / 1024 ** 3).toFixed(1)}G`;
+  if (bytes >= 1024 ** 2) return `${(bytes / 1024 ** 2).toFixed(0)}M`;
+  if (bytes > 0) return `${(bytes / 1024).toFixed(0)}K`;
+  return "-";
+}
+
 export default function ContainersPage() {
   const [containers, setContainers] = useState<Container[]>([]);
+  const [stats, setStats] = useState<Record<string, ContainerStat>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [tab, setTab] = useState<DetailTab>("logs");
   const [isLoading, setIsLoading] = useState(true);
@@ -20,11 +35,26 @@ export default function ContainersPage() {
     setSelectedId((prev) => prev ?? (data[0]?.id ?? null));
   }, []);
 
+  const loadStats = useCallback(async () => {
+    try {
+      const data = await apiFetch<ContainerStat[]>("/api/system/container-stats");
+      const map: Record<string, ContainerStat> = {};
+      data.forEach((s) => { map[s.id] = s; });
+      setStats(map);
+    } catch {}
+  }, []);
+
   useEffect(() => {
     loadContainers().catch(console.error);
-    const interval = setInterval(() => loadContainers().catch(console.error), 10000);
-    return () => clearInterval(interval);
+    const t1 = setInterval(() => loadContainers().catch(console.error), 10000);
+    return () => clearInterval(t1);
   }, [loadContainers]);
+
+  useEffect(() => {
+    loadStats();
+    const t2 = setInterval(loadStats, 10000);
+    return () => clearInterval(t2);
+  }, [loadStats]);
 
   async function action(id: string, act: "start" | "stop" | "restart") {
     try {
@@ -45,7 +75,7 @@ export default function ContainersPage() {
           <button
             type="button"
             className="btn-sm"
-            onClick={() => loadContainers().catch(console.error)}
+            onClick={() => { loadContainers().catch(console.error); loadStats(); }}
           >
             새로고침
           </button>
@@ -55,6 +85,8 @@ export default function ContainersPage() {
           <span>ID</span>
           <span>Image</span>
           <span>Port</span>
+          <span>CPU</span>
+          <span>MEM</span>
           <span>Status</span>
           <span></span>
         </div>
@@ -65,31 +97,40 @@ export default function ContainersPage() {
           {!isLoading && containers.length === 0 && (
             <div className="ct-empty">컨테이너가 없습니다.</div>
           )}
-          {containers.map((c) => (
-            <div
-              key={c.id}
-              className={`ct-row ${selectedId === c.id ? "selected" : ""}`}
-              onClick={() => setSelectedId(c.id)}
-              onKeyDown={(e) => e.key === "Enter" && setSelectedId(c.id)}
-              role="button"
-              tabIndex={0}
-            >
-              <span className="ct-name">{c.name}</span>
-              <span className="ct-id">{c.id}</span>
-              <span className="ct-image">{c.image}</span>
-              <span className="ct-ports">{c.ports}</span>
-              <span className={`ct-status status-${c.status}`}>{c.status}</span>
+          {containers.map((c) => {
+            const s = stats[c.id];
+            return (
               <div
-                className="ct-actions"
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.stopPropagation()}
+                key={c.id}
+                className={`ct-row ${selectedId === c.id ? "selected" : ""}`}
+                onClick={() => setSelectedId(c.id)}
+                onKeyDown={(e) => e.key === "Enter" && setSelectedId(c.id)}
+                role="button"
+                tabIndex={0}
               >
-                <button type="button" className="btn-sm" onClick={() => action(c.id, "start")}>시작</button>
-                <button type="button" className="btn-sm" onClick={() => action(c.id, "stop")}>중지</button>
-                <button type="button" className="btn-sm" onClick={() => action(c.id, "restart")}>재시작</button>
+                <span className="ct-name">{c.name}</span>
+                <span className="ct-id">{c.id}</span>
+                <span className="ct-image">{c.image}</span>
+                <span className="ct-ports">{c.ports}</span>
+                <span className="ct-cpu">
+                  {c.status === "running" && s ? `${s.cpu_percent}%` : "-"}
+                </span>
+                <span className="ct-mem">
+                  {c.status === "running" && s ? fmtMem(s.mem_usage) : "-"}
+                </span>
+                <span className={`ct-status status-${c.status}`}>{c.status}</span>
+                <div
+                  className="ct-actions"
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                >
+                  <button type="button" className="btn-sm" onClick={() => action(c.id, "start")}>시작</button>
+                  <button type="button" className="btn-sm" onClick={() => action(c.id, "stop")}>중지</button>
+                  <button type="button" className="btn-sm" onClick={() => action(c.id, "restart")}>재시작</button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
