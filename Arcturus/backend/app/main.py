@@ -8,7 +8,7 @@ from app.auth import hash_password
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.models import User
-from app.routers import auth, containers, ws
+from app.routers import auth, containers, db, ws
 
 
 def seed_admin():
@@ -47,6 +47,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(containers.router)
+app.include_router(db.router)
 app.include_router(ws.router)
 
 

@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch, setToken } from "../api/client";
 import ContainersPage from "./ContainersPage";
+import DBEditorPage from "./DBEditorPage";
 import TerminalPage from "./TerminalPage";
 import type { User } from "../types";
 import "./Dashboard.css";
 
-type Page = "containers" | "terminal";
+type Page = "containers" | "terminal" | "db";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -53,9 +54,19 @@ export default function Dashboard() {
             <span className="nav-icon">▣</span>
             컨테이너
           </button>
+          <button
+            type="button"
+            className={`nav-item ${page === "db" ? "active" : ""}`}
+            onClick={() => setPage("db")}
+          >
+            <span className="nav-icon">⛁</span>
+            DB 에디터
+          </button>
         </nav>
         <main className="content">
-          {page === "containers" ? <ContainersPage /> : <TerminalPage />}
+          {page === "terminal" && <TerminalPage />}
+          {page === "containers" && <ContainersPage />}
+          {page === "db" && <DBEditorPage />}
         </main>
       </div>
     </div>
