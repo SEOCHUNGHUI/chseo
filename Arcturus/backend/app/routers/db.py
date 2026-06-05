@@ -48,6 +48,7 @@ def _connect_mysql(host, port, user, password, dbname):
         host=host, port=port, user=user, password=password,
         database=dbname, connect_timeout=10,
         charset="utf8mb4", autocommit=False,
+        ssl_disabled=True,
     )
 
 

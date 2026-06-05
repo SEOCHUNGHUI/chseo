@@ -147,14 +147,14 @@ export default function DBEditorPage() {
   }
 
   async function saveConnection() {
-    const { name, host, port, username, dbname } = form;
+    const { name, db_type, host, port, username, dbname } = form;
     if (!name || !host || !username || !dbname) {
       alert("필수 항목(이름, Host, 사용자명, DB명)을 입력하세요");
       return;
     }
     await apiFetch("/api/db/connections", {
       method: "POST",
-      body: JSON.stringify({ name, host, port: Number(port), username, dbname }),
+      body: JSON.stringify({ name, db_type, host, port: Number(port), username, dbname }),
     });
     setForm(EMPTY_FORM);
     setShowAddForm(false);
