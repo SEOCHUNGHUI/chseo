@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch, setToken } from "../api/client";
 import ContainersPage from "./ContainersPage";
 import DBEditorPage from "./DBEditorPage";
+import FileTransferPage from "./FileTransferPage";
 import TerminalPage from "./TerminalPage";
 import type { User } from "../types";
 import "./Dashboard.css";
 
-type Page = "containers" | "terminal" | "db";
+type Page = "containers" | "terminal" | "db" | "filetransfer";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -62,11 +63,20 @@ export default function Dashboard() {
             <span className="nav-icon">⛁</span>
             DB 에디터
           </button>
+          <button
+            type="button"
+            className={`nav-item ${page === "filetransfer" ? "active" : ""}`}
+            onClick={() => setPage("filetransfer")}
+          >
+            <span className="nav-icon">⇅</span>
+            파일전송
+          </button>
         </nav>
         <main className="content">
           {page === "terminal" && <TerminalPage />}
           {page === "containers" && <ContainersPage />}
           {page === "db" && <DBEditorPage />}
+          {page === "filetransfer" && <FileTransferPage />}
         </main>
       </div>
     </div>

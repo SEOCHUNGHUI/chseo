@@ -182,6 +182,12 @@ const ws = new WebSocket(wsUrl("/ws/some/path"));
 
 | 경로 | 기능 | 인증 |
 |------|------|------|
+| `/api/sftp/list` | 디렉토리 목록 조회 | Bearer |
+| `/api/sftp/upload` | 파일 업로드 (multipart) | Bearer |
+| `/api/sftp/download` | 파일 다운로드 (StreamingResponse) | Bearer |
+| `/api/sftp/mkdir` | 디렉토리 생성 | Bearer |
+| `/api/sftp/delete` | 파일/디렉토리 삭제 | Bearer |
+| `/api/sftp/rename` | 이름 변경 | Bearer |
 | `/ws/logs/{container_id}` | 컨테이너 로그 스트리밍 | JWT query param |
 | `/ws/terminal/{container_id}` | Docker exec 셸 | JWT query param |
 | `/ws/terminal` | 호스트 셸 (/bin/bash) | JWT query param |

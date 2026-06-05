@@ -1,0 +1,610 @@
+.ft-page {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── 좌측 사이드바 ── */
+.ft-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ft-sidebar-header {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ft-server-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.4rem;
+}
+
+.ft-empty {
+  padding: 1.5rem 0.75rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+.ft-server-row {
+  border-radius: 7px;
+  border: 1px solid transparent;
+  margin-bottom: 0.3rem;
+  transition: border-color 0.15s;
+  overflow: hidden;
+}
+
+.ft-server-row.connected {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.06);
+}
+
+.ft-server-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  padding: 0.45rem 0.6rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ft-server-info:hover {
+  background: rgba(59, 130, 246, 0.07);
+}
+
+.ft-server-name {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ft-server-addr {
+  font-size: 0.69rem;
+  color: var(--muted);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ft-badge {
+  font-size: 0.65rem;
+  padding: 0.08rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--success);
+  align-self: flex-start;
+}
+
+.ft-sidebar-footer {
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* ── 우측 메인 ── */
+.ft-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── 업로드 패널 ── */
+.ft-upload-panel {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── 원격 패널 ── */
+.ft-remote-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── 패널 공통 헤더 ── */
+.ft-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ft-panel-path {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: monospace;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+.ft-remote-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+/* ── 드롭존 ── */
+.ft-drop-zone {
+  margin: 0.6rem;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.ft-drop-zone:hover:not(.disabled) {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.ft-drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.ft-drop-zone.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ft-drop-icon {
+  font-size: 1.8rem;
+  color: var(--muted);
+}
+
+.ft-drop-text {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── 업로드 큐 ── */
+.ft-queue {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 0.6rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ft-queue-empty {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+  padding: 1rem;
+}
+
+.ft-queue-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.ft-queue-item.status-uploading {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.07);
+}
+
+.ft-queue-item.status-done {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.06);
+}
+
+.ft-queue-item.status-error {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.ft-queue-icon {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.status-done .ft-queue-icon { color: var(--success); }
+.status-error .ft-queue-icon { color: var(--danger); }
+.status-uploading .ft-queue-icon { color: var(--accent); }
+
+.ft-queue-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ft-queue-size {
+  color: var(--muted);
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+
+.ft-queue-error {
+  color: var(--danger);
+  font-weight: 700;
+  cursor: help;
+}
+
+.ft-queue-clear {
+  margin-top: 0.3rem;
+  align-self: flex-end;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.ft-queue-clear:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ── 경로 바 ── */
+.ft-path-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.ft-path-up {
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ft-path-up:hover:not(:disabled) { border-color: var(--accent); }
+.ft-path-up:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ft-path-input {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-family: monospace;
+  font-size: 0.82rem;
+}
+
+.ft-path-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.ft-path-input:disabled { opacity: 0.4; }
+
+/* ── 브레드크럼 ── */
+.ft-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 0.28rem 0.75rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.76rem;
+  flex-shrink: 0;
+}
+
+.ft-crumb {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0 0.15rem;
+  font-size: 0.76rem;
+}
+
+.ft-crumb:hover { text-decoration: underline; }
+
+.ft-crumb-sep {
+  color: var(--muted);
+  padding: 0 0.05rem;
+}
+
+/* ── 새 폴더 바 ── */
+.ft-mkdir-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(59, 130, 246, 0.05);
+  flex-shrink: 0;
+}
+
+.ft-mkdir-input {
+  flex: 1;
+  padding: 0.25rem 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.ft-mkdir-input:focus { outline: none; }
+
+/* ── 파일 목록 ── */
+.ft-file-list-wrap {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ft-file-header {
+  display: grid;
+  grid-template-columns: 1fr 80px 110px 60px 90px;
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.ft-file-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.ft-file-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 110px 60px 90px;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+  border-left: 2px solid transparent;
+  font-size: 0.82rem;
+}
+
+.ft-file-row:hover { background: rgba(59, 130, 246, 0.05); }
+.ft-file-row.selected {
+  background: rgba(59, 130, 246, 0.1);
+  border-left-color: var(--accent);
+}
+.ft-file-row.is-dir .ft-file-name { font-weight: 600; }
+
+.ft-file-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ft-file-icon { font-size: 0.88rem; flex-shrink: 0; }
+
+.ft-file-size {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-family: monospace;
+  text-align: right;
+}
+
+.ft-file-date {
+  color: var(--muted);
+  font-size: 0.73rem;
+}
+
+.ft-file-perm {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-family: monospace;
+}
+
+.ft-file-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.ft-rename-input {
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 0.82rem;
+  padding: 0.1rem 0.3rem;
+  width: 140px;
+}
+
+.ft-rename-input:focus { outline: none; }
+
+.ft-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.ft-error {
+  padding: 1rem;
+  color: var(--danger);
+  font-size: 0.82rem;
+}
+
+/* ── 버튼 ── */
+.btn-xs {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-xs:hover { border-color: var(--accent); color: var(--accent); }
+.btn-xs.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+.btn-sm {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn-sm:hover { border-color: var(--accent); }
+
+.btn-primary {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-primary:hover { background: var(--accent-hover); }
+
+.btn-primary-sm {
+  padding: 0.22rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-primary-sm:hover { background: var(--accent-hover); }
+
+.btn-danger-sm {
+  width: 100%;
+  padding: 0.3rem 0;
+  font-size: 0.78rem;
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--danger);
+  cursor: pointer;
+}
+
+.btn-danger-sm:hover { background: rgba(239, 68, 68, 0.1); }
+
+/* ── 모달 ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 310px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.modal h3 { margin: 0; font-size: 1rem; }
+
+.modal-target {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: monospace;
+}
+
+.modal-error {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--danger);
+}
+
+.modal input {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.modal input:focus { outline: none; border-color: var(--accent); }
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
