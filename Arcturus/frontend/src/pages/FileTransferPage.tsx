@@ -296,17 +296,23 @@ export default function FileTransferPage() {
     }
   }
 
-  // ── 업로드 처리 ──
-  async function uploadFiles(files: FileList | File[]) {
-    if (!creds) return;
+  // ── 파일 선택 → 큐에 추가만 (업로드 아직 안 함) ──
+  function stageFiles(files: FileList | File[]) {
     const items: UploadItem[] = Array.from(files).map((f) => ({
       id: `${Date.now()}-${Math.random()}`,
       file: f,
-      status: "pending",
+      status: "pending" as const,
     }));
     setUploadQueue((q) => [...q, ...items]);
+  }
 
-    for (const item of items) {
+  // ── 실제 업로드 실행 ──
+  async function startUpload() {
+    if (!creds) return;
+    const pending = uploadQueue.filter((x) => x.status === "pending");
+    if (pending.length === 0) return;
+
+    for (const item of pending) {
       setUploadQueue((q) =>
         q.map((x) => (x.id === item.id ? { ...x, status: "uploading" } : x))
       );
@@ -334,14 +340,17 @@ export default function FileTransferPage() {
       } catch (err) {
         setUploadQueue((q) =>
           q.map((x) =>
-            x.id === item.id
-              ? { ...x, status: "error", error: String(err) }
-              : x
+            x.id === item.id ? { ...x, status: "error", error: String(err) } : x
           )
         );
       }
     }
     loadDir(remotePath, creds);
+  }
+
+  // ── 큐에서 개별 항목 제거 ──
+  function removeFromQueue(id: string) {
+    setUploadQueue((q) => q.filter((x) => x.id !== id));
   }
 
   // 드래그앤드롭
@@ -350,7 +359,7 @@ export default function FileTransferPage() {
     setIsDragOver(false);
     if (!creds) return;
     const files = e.dataTransfer.files;
-    if (files.length) uploadFiles(files);
+    if (files.length) stageFiles(files);
   }
 
   // 브레드크럼
@@ -518,12 +527,30 @@ export default function FileTransferPage() {
             type="file"
             multiple
             style={{ display: "none" }}
-            onChange={(e) => e.target.files && uploadFiles(e.target.files)}
+            onChange={(e) => {
+              if (e.target.files) stageFiles(e.target.files);
+              e.target.value = "";
+            }}
           />
+
+          {/* 업로드 실행 버튼 */}
+          {uploadQueue.some((x) => x.status === "pending") && (
+            <div className="ft-upload-action">
+              <button
+                type="button"
+                className="ft-upload-start-btn"
+                onClick={startUpload}
+                disabled={!creds}
+              >
+                ⬆ 서버로 업로드 ({uploadQueue.filter((x) => x.status === "pending").length}개)
+              </button>
+              <span className="ft-upload-dest" title={remotePath}>→ {remotePath}</span>
+            </div>
+          )}
 
           <div className="ft-queue">
             {uploadQueue.length === 0 && (
-              <div className="ft-queue-empty">업로드 내역이 없습니다.</div>
+              <div className="ft-queue-empty">파일을 선택하면 여기에 표시됩니다.</div>
             )}
             {uploadQueue.map((item) => (
               <div key={item.id} className={`ft-queue-item status-${item.status}`}>
@@ -539,9 +566,19 @@ export default function FileTransferPage() {
                 {item.error && (
                   <span className="ft-queue-error" title={item.error}>!</span>
                 )}
+                {item.status === "pending" && (
+                  <button
+                    type="button"
+                    className="ft-queue-remove"
+                    onClick={() => removeFromQueue(item.id)}
+                    title="제거"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
             ))}
-            {uploadQueue.length > 0 && (
+            {uploadQueue.length > 0 && !uploadQueue.some((x) => x.status === "pending" || x.status === "uploading") && (
               <button
                 type="button"
                 className="ft-queue-clear"

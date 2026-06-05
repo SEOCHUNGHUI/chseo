@@ -305,6 +305,48 @@
   color: var(--muted);
 }
 
+/* ── 업로드 실행 버튼 ── */
+.ft-upload-action {
+  margin: 0 0.6rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.ft-upload-start-btn {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #16a34a;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.ft-upload-start-btn:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.ft-upload-start-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ft-upload-dest {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── 업로드 큐 ── */
 .ft-queue {
   flex: 1;
@@ -376,6 +418,19 @@
   font-weight: 700;
   cursor: help;
 }
+
+.ft-queue-remove {
+  margin-left: auto;
+  padding: 0 0.3rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ft-queue-remove:hover { color: var(--danger); }
 
 .ft-queue-clear {
   margin-top: 0.3rem;

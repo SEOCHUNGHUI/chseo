@@ -1,0 +1,221 @@
+.memo-page {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── 좌측 목록 ── */
+.memo-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.memo-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.btn-icon {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.memo-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.4rem;
+}
+
+.memo-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+.memo-item {
+  display: flex;
+  align-items: stretch;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.memo-item:hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.memo-item.active {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.memo-item-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  padding: 0.5rem 0.65rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+}
+
+.memo-item-title {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.memo-item-date {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.memo-item-delete {
+  padding: 0 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.memo-item:hover .memo-item-delete {
+  opacity: 1;
+}
+
+.memo-item-delete:hover {
+  color: var(--danger);
+}
+
+/* ── 우측 에디터 ── */
+.memo-editor-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.memo-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.memo-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.memo-status {
+  font-size: 0.75rem;
+  color: var(--muted);
+  min-width: 70px;
+}
+
+.memo-shortcut {
+  font-size: 0.72rem;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.btn-save {
+  padding: 0.28rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.memo-title-input {
+  width: 100%;
+  padding: 0.9rem 1.2rem 0.5rem;
+  background: var(--bg);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 600;
+  outline: none;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.memo-title-input::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.memo-content-input {
+  flex: 1;
+  padding: 1rem 1.2rem;
+  background: var(--bg);
+  border: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+  outline: none;
+  resize: none;
+  min-height: 0;
+}
+
+.memo-content-input::placeholder {
+  color: var(--muted);
+}

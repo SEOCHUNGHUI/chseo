@@ -26,14 +26,24 @@ def list_containers(all_containers: bool = True) -> list[dict[str, Any]]:
     result = []
     for c in containers:
         name = c.name or c.short_id
-        ports_map = c.ports or {}
-        port_parts = []
-        for container_port, bindings in ports_map.items():
-            if bindings:
-                for b in bindings:
-                    hp = b.get("HostPort", "")
-                    if hp:
-                        port_parts.append(f"{hp}:{container_port.split('/')[0]}")
+
+        # containers.list()는 Ports를 [{IP, PrivatePort, PublicPort, Type}] 형태로 반환
+        raw_ports = c.attrs.get("Ports") or []
+        port_set: set[str] = set()
+        if isinstance(raw_ports, list):
+            for p in raw_ports:
+                pub = p.get("PublicPort")
+                priv = p.get("PrivatePort")
+                if pub and priv:
+                    port_set.add(f"{pub}:{priv}")
+        elif isinstance(raw_ports, dict):
+            for container_port, bindings in raw_ports.items():
+                if bindings:
+                    for b in bindings:
+                        hp = b.get("HostPort", "")
+                        if hp:
+                            port_set.add(f"{hp}:{container_port.split('/')[0]}")
+        port_parts = sorted(port_set)
         result.append(
             {
                 "id": c.short_id,

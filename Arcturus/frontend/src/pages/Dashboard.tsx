@@ -4,11 +4,12 @@ import { apiFetch, setToken } from "../api/client";
 import ContainersPage from "./ContainersPage";
 import DBEditorPage from "./DBEditorPage";
 import FileTransferPage from "./FileTransferPage";
+import MemoPage from "./MemoPage";
 import TerminalPage from "./TerminalPage";
 import type { User } from "../types";
 import "./Dashboard.css";
 
-type Page = "containers" | "terminal" | "db" | "filetransfer";
+type Page = "containers" | "terminal" | "db" | "filetransfer" | "memo";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -71,12 +72,21 @@ export default function Dashboard() {
             <span className="nav-icon">⇅</span>
             파일전송
           </button>
+          <button
+            type="button"
+            className={`nav-item ${page === "memo" ? "active" : ""}`}
+            onClick={() => setPage("memo")}
+          >
+            <span className="nav-icon">✎</span>
+            메모
+          </button>
         </nav>
         <main className="content">
           {page === "terminal" && <TerminalPage />}
           {page === "containers" && <ContainersPage />}
           {page === "db" && <DBEditorPage />}
           {page === "filetransfer" && <FileTransferPage />}
+          {page === "memo" && <MemoPage />}
         </main>
       </div>
     </div>
