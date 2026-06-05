@@ -61,7 +61,8 @@ def generate_images(
     *,
     start: int = 1,
     end: int = 1000,
-    image_size: int = 512,
+    width: int = 512,
+    height: int = 512,
     background: tuple[int, int, int] = (255, 255, 255),
     text_color: tuple[int, int, int] = (0, 0, 0),
     output_dir: Path = Path("output"),
@@ -69,22 +70,22 @@ def generate_images(
 ) -> float:
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    base_font = _load_font(font_size=int(image_size * 0.28))
+    base_font = _load_font(font_size=int(min(width, height) * 0.28))
     pad_width = max(4, len(str(end)))
 
     t0 = time.perf_counter()
     for n in range(start, end + 1):
-        img = Image.new("RGB", (image_size, image_size), background)
+        img = Image.new("RGB", (width, height), background)
         draw = ImageDraw.Draw(img)
 
         text = str(n)
-        font = _fit_font(draw, text, base_font, image_size)
+        font = _fit_font(draw, text, base_font, min(width, height))
 
         bbox = draw.textbbox((0, 0), text, font=font)
         text_w = bbox[2] - bbox[0]
         text_h = bbox[3] - bbox[1]
-        x = (image_size - text_w) / 2 - bbox[0]
-        y = (image_size - text_h) / 2 - bbox[1]
+        x = (width - text_w) / 2 - bbox[0]
+        y = (height - text_h) / 2 - bbox[1]
 
         draw.text((x, y), text, font=font, fill=text_color)
 
@@ -98,14 +99,21 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate numbered images using Pillow.")
     parser.add_argument("--start", type=int, default=1, help="Start number (inclusive). Default: 1")
     parser.add_argument("--end", type=int, default=1000, help="End number (inclusive). Default: 1000")
-    parser.add_argument("--size", type=int, default=512, help="Image size in pixels (square). Default: 512")
+    parser.add_argument("--width", type=int, default=512, help="Image width in pixels. Default: 512")
+    parser.add_argument("--height", type=int, default=512, help="Image height in pixels. Default: 512")
     parser.add_argument("--output", type=Path, default=Path("output"), help="Output directory. Default: output/")
     args = parser.parse_args()
 
     if args.start < 1 or args.end < args.start:
         raise SystemExit("Invalid range: require 1 <= start <= end.")
 
-    elapsed = generate_images(start=args.start, end=args.end, image_size=args.size, output_dir=args.output)
+    elapsed = generate_images(
+        start=args.start,
+        end=args.end,
+        width=args.width,
+        height=args.height,
+        output_dir=args.output,
+    )
     count = args.end - args.start + 1
     print(f"Generated {count} images in {elapsed:.3f} seconds ({args.output.as_posix()}/).")
     print(f"Avg per image: {elapsed / count:.6f} seconds")

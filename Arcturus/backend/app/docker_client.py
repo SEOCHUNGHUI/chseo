@@ -25,8 +25,7 @@ def list_containers(all_containers: bool = True) -> list[dict[str, Any]]:
     containers = client.containers.list(all=all_containers)
     result = []
     for c in containers:
-        names = c.attrs.get("Names") or []
-        name = names[0].lstrip("/") if names else c.short_id
+        name = c.name or c.short_id
         ports_map = c.ports or {}
         port_parts = []
         for container_port, bindings in ports_map.items():

@@ -50,6 +50,14 @@ export default function ContainersPage() {
             새로고침
           </button>
         </div>
+        <div className="ct-col-header">
+          <span>Name</span>
+          <span>ID</span>
+          <span>Image</span>
+          <span>Port</span>
+          <span>Status</span>
+          <span></span>
+        </div>
         <div className="ct-table">
           {isLoading && (
             <div className="ct-empty">컨테이너를 조회하고 있습니다.</div>
