@@ -99,19 +99,30 @@ async def container_terminal(websocket: WebSocket, container_id: str):
         return
 
     if container.status != "running":
-        await websocket.send_json({"type": "error", "data": "Container is not running"})
+        await websocket.send_bytes(b"\r\n\x1b[31mContainer is not running\x1b[0m\r\n")
         await websocket.close()
         return
 
-    exec_id = client.api.exec_create(
-        container.id,
-        ["/bin/sh", "-c", "[ -x /bin/bash ] && exec /bin/bash; [ -x /bin/ash ] && exec /bin/ash; exec /bin/sh"],
-        stdin=True,
-        tty=True,
-        environment={"TERM": "xterm-256color"},
-    )["Id"]
-    sock = client.api.exec_start(exec_id, detach=False, tty=True, stream=True, socket=True)
-    sock.setblocking(False)
+    try:
+        exec_id = client.api.exec_create(
+            container.id,
+            ["/bin/sh", "-c", "[ -x /bin/bash ] && exec /bin/bash; [ -x /bin/ash ] && exec /bin/ash; exec /bin/sh"],
+            stdin=True,
+            tty=True,
+            environment={"TERM": "xterm-256color"},
+        )["Id"]
+        sock = client.api.exec_start(exec_id, detach=False, tty=True, socket=True)
+    except Exception as exc:
+        await websocket.send_bytes(f"\r\n\x1b[31mexec 실패: {exc}\x1b[0m\r\n".encode())
+        await websocket.close()
+        return
+
+    # Docker SDK exec socket — get the underlying raw socket for select()
+    raw = getattr(sock, "_sock", sock)
+    try:
+        raw.setblocking(False)
+    except Exception:
+        pass
 
     loop = asyncio.get_event_loop()
     stop = asyncio.Event()
@@ -119,9 +130,9 @@ async def container_terminal(websocket: WebSocket, container_id: str):
     def read_socket():
         while not stop.is_set():
             try:
-                r, _, _ = select.select([sock], [], [], 0.2)
+                r, _, _ = select.select([raw], [], [], 0.2)
                 if r:
-                    data = sock.recv(4096)
+                    data = raw.recv(4096)
                     if not data:
                         break
                     asyncio.run_coroutine_threadsafe(websocket.send_bytes(data), loop)
@@ -136,17 +147,20 @@ async def container_terminal(websocket: WebSocket, container_id: str):
             if message["type"] == "websocket.disconnect":
                 break
             if "bytes" in message and message["bytes"]:
-                sock.send(message["bytes"])
+                raw.send(message["bytes"])
             elif "text" in message and message["text"]:
                 try:
                     payload = json.loads(message["text"])
                 except json.JSONDecodeError:
-                    sock.send(message["text"].encode())
+                    raw.send(message["text"].encode())
                     continue
                 if payload.get("type") == "resize":
                     rows = int(payload.get("rows", 24))
                     cols = int(payload.get("cols", 80))
-                    client.api.exec_resize(exec_id, height=rows, width=cols)
+                    try:
+                        client.api.exec_resize(exec_id, height=rows, width=cols)
+                    except Exception:
+                        pass
     except WebSocketDisconnect:
         pass
     finally:
