@@ -24,6 +24,7 @@ class ContainerSummary(BaseModel):
     image: str
     status: str
     state: str
+    ports: str = "-"
 
 
 class ContainerActionResponse(BaseModel):

@@ -67,34 +67,18 @@ export default function ContainersPage() {
               tabIndex={0}
             >
               <span className="ct-name">{c.name}</span>
+              <span className="ct-id">{c.id}</span>
               <span className="ct-image">{c.image}</span>
-              <span className={`badge status-${c.status}`}>{c.status}</span>
+              <span className="ct-ports">{c.ports}</span>
+              <span className={`ct-status status-${c.status}`}>{c.status}</span>
               <div
                 className="ct-actions"
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
               >
-                <button
-                  type="button"
-                  className="btn-sm"
-                  onClick={() => action(c.id, "start")}
-                >
-                  시작
-                </button>
-                <button
-                  type="button"
-                  className="btn-sm"
-                  onClick={() => action(c.id, "stop")}
-                >
-                  중지
-                </button>
-                <button
-                  type="button"
-                  className="btn-sm"
-                  onClick={() => action(c.id, "restart")}
-                >
-                  재시작
-                </button>
+                <button type="button" className="btn-sm" onClick={() => action(c.id, "start")}>시작</button>
+                <button type="button" className="btn-sm" onClick={() => action(c.id, "stop")}>중지</button>
+                <button type="button" className="btn-sm" onClick={() => action(c.id, "restart")}>재시작</button>
               </div>
             </div>
           ))}

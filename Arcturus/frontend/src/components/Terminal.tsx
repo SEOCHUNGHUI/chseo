@@ -36,28 +36,21 @@ export default function Terminal({ containerId, mode }: Props) {
     termRef.current = term;
     fitRef.current = fit;
 
-    const onResize = () => {
-      fit.fit();
-      sendResize();
-    };
-    window.addEventListener("resize", onResize);
-
     function sendResize() {
       const ws = wsRef.current;
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      ws.send(
-        JSON.stringify({
-          type: "resize",
-          rows: term.rows,
-          cols: term.cols,
-        }),
-      );
+      ws.send(JSON.stringify({ type: "resize", rows: term.rows, cols: term.cols }));
     }
 
+    // ResizeObserver로 컨테이너 크기 변화 감지 (window resize보다 정확)
+    const observer = new ResizeObserver(() => {
+      fit.fit();
+      sendResize();
+    });
+    observer.observe(containerRef.current);
+
     function connect() {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
+      wsRef.current?.close();
 
       const path =
         mode === "host" || !containerId
@@ -71,6 +64,7 @@ export default function Terminal({ containerId, mode }: Props) {
       ws.onopen = () => {
         term.clear();
         term.writeln("\x1b[32m연결됨\x1b[0m");
+        fit.fit();
         sendResize();
       };
 
@@ -82,13 +76,8 @@ export default function Terminal({ containerId, mode }: Props) {
         }
       };
 
-      ws.onclose = () => {
-        term.writeln("\r\n\x1b[31m연결 종료\x1b[0m");
-      };
-
-      ws.onerror = () => {
-        term.writeln("\r\n\x1b[31m연결 오류\x1b[0m");
-      };
+      ws.onclose = () => term.writeln("\r\n\x1b[31m연결 종료\x1b[0m");
+      ws.onerror = () => term.writeln("\r\n\x1b[31m연결 오류\x1b[0m");
 
       term.onData((data) => {
         if (ws.readyState === WebSocket.OPEN) {
@@ -104,7 +93,7 @@ export default function Terminal({ containerId, mode }: Props) {
     }
 
     return () => {
-      window.removeEventListener("resize", onResize);
+      observer.disconnect();
       wsRef.current?.close();
       term.dispose();
     };

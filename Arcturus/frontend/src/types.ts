@@ -4,6 +4,7 @@ export interface Container {
   image: string;
   status: string;
   state: string;
+  ports: string;
 }
 
 export interface User {

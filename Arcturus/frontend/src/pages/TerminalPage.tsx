@@ -277,7 +277,6 @@ export default function TerminalPage() {
         <div
           ref={termAreaRef}
           className="ssh-xterm"
-          style={{ display: connectedId ? "block" : "none" }}
         />
       </div>
 

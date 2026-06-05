@@ -7,9 +7,10 @@
 
 .terminal-wrap {
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
   padding: 0.5rem;
   background: #0a0e14;
-  min-height: 200px;
 }
 
 .terminal-wrap .xterm {
