@@ -27,22 +27,28 @@ def list_containers(all_containers: bool = True) -> list[dict[str, Any]]:
     for c in containers:
         name = c.name or c.short_id
 
-        # containers.list()는 Ports를 [{IP, PrivatePort, PublicPort, Type}] 형태로 반환
-        raw_ports = c.attrs.get("Ports") or []
         port_set: set[str] = set()
-        if isinstance(raw_ports, list):
-            for p in raw_ports:
+
+        # 방법 1: list 엔드포인트의 Ports 배열 [{IP, PrivatePort, PublicPort, Type}]
+        raw_list = c.attrs.get("Ports") or []
+        if isinstance(raw_list, list):
+            for p in raw_list:
                 pub = p.get("PublicPort")
                 priv = p.get("PrivatePort")
                 if pub and priv:
                     port_set.add(f"{pub}:{priv}")
-        elif isinstance(raw_ports, dict):
-            for container_port, bindings in raw_ports.items():
-                if bindings:
-                    for b in bindings:
-                        hp = b.get("HostPort", "")
-                        if hp:
-                            port_set.add(f"{hp}:{container_port.split('/')[0]}")
+
+        # 방법 2: NetworkSettings.Ports 딕셔너리 (inspect 포맷)
+        if not port_set:
+            ns_ports = c.attrs.get("NetworkSettings", {}).get("Ports") or {}
+            if isinstance(ns_ports, dict):
+                for container_port, bindings in ns_ports.items():
+                    if bindings:
+                        for b in bindings:
+                            hp = b.get("HostPort", "")
+                            if hp:
+                                port_set.add(f"{hp}:{container_port.split('/')[0]}")
+
         port_parts = sorted(port_set)
         result.append(
             {

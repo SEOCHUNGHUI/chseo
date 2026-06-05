@@ -1,3 +1,8 @@
+/* 한 곳에서 컬럼 비율 관리 — 헤더와 행이 동일 변수를 참조 */
+:root {
+  --ct-grid: 1.4fr 90px 1.8fr 110px 58px 64px 90px auto;
+}
+
 .containers-page {
   display: flex;
   flex-direction: column;
@@ -28,17 +33,19 @@
 
 .ct-col-header {
   display: grid;
-  grid-template-columns: minmax(100px, 1.3fr) 75px minmax(110px, 1.5fr) minmax(70px, 0.9fr) 55px 65px 85px auto;
+  grid-template-columns: var(--ct-grid);
   gap: 0.5rem;
   padding: 0.3rem 1rem;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .ct-table {
@@ -62,7 +69,7 @@
 
 .ct-row {
   display: grid;
-  grid-template-columns: minmax(100px, 1.3fr) 75px minmax(110px, 1.5fr) minmax(70px, 0.9fr) 55px 65px 85px auto;
+  grid-template-columns: var(--ct-grid);
   align-items: center;
   gap: 0.6rem;
   padding: 0.5rem 1rem;

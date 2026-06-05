@@ -80,17 +80,18 @@ export default function ContainersPage() {
             새로고침
           </button>
         </div>
-        <div className="ct-col-header">
-          <span>Name</span>
-          <span>ID</span>
-          <span>Image</span>
-          <span>Port</span>
-          <span>CPU</span>
-          <span>MEM</span>
-          <span>Status</span>
-          <span></span>
-        </div>
         <div className="ct-table">
+          {/* 헤더를 스크롤 영역 안에 sticky로 배치 → 행과 동일한 너비 보장 */}
+          <div className="ct-col-header">
+            <span>Name</span>
+            <span>ID</span>
+            <span>Image</span>
+            <span>Port</span>
+            <span>CPU</span>
+            <span>MEM</span>
+            <span>Status</span>
+            <span></span>
+          </div>
           {isLoading && (
             <div className="ct-empty">컨테이너를 조회하고 있습니다.</div>
           )}
